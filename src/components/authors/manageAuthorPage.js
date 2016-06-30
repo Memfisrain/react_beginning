@@ -7,8 +7,28 @@ var AuthorApi = require("../../api/authorApi");
 var manageAuthor = React.createClass({
 	getInitialState: function () {
 	    return {
-	        author: {id: "", firstName: "", lastName: ""} 
+	        author: {id: "", firstName: "", lastName: ""},
+	        errors: {}
 	    };
+	},
+
+	isFormValid: function() {
+		var isValid = true;
+		this.state.errors = {};
+
+		if (this.state.author.firstName.length < 3) {
+			this.state.errors.firstName = "First name should contain at least 3 symbols";
+			isValid = false;
+		}
+
+		if (this.state.author.lastName.length < 3) {
+			this.state.errors.lastName = "Last name should contain at least 3 symbols";
+			isValid = false;
+		}
+
+		this.setState({errors: this.state.errors});
+
+		return isValid;
 	},
 
 	setAuthorState: function(event) {
@@ -18,9 +38,13 @@ var manageAuthor = React.createClass({
 		return this.setState({author: this.state.author});
 	},
 
-	seveAuthor: function(event) {
+	saveAuthor: function(event) {
 		event.preventDefault();
-		AuthorApi.saveAuthor(this.state.author);
+
+		if ( this.isFormValid() ) {
+			console.log("valid");
+			AuthorApi.saveAuthor(this.state.author);
+		}
 	},
 
 	render: function() {
@@ -28,7 +52,8 @@ var manageAuthor = React.createClass({
 				<AuthorForm 
 					author={this.state.author}
 					onChange={this.setAuthorState}
-					onSave={this.saveAuthor} />
+					onSave={this.saveAuthor}
+					errors={this.state.errors} />
 		);
 	}
 });
