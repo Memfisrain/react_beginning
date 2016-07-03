@@ -2,7 +2,8 @@
 
 var React = require("react");
 var AuthorForm = require("./authorForm");
-var AuthorApi = require("../../api/authorApi");
+var AuthorActions = require("../../actions/authorActions");
+var AuthorStore = require("../../stores/authorStore");
 var Router = require("react-router");
 var toastr = require("toastr");
 
@@ -11,11 +12,28 @@ var manageAuthor = React.createClass({
 		Router.Navigation
 	],
 
+	statics: {
+		willTransitionFrom: function(transition, component) {
+			if (component.state.dirty && !confirm("Are you sure you want to leave without saving data?")) {
+				transition.abort();
+			}
+		}
+	},
+
 	getInitialState: function () {
 	    return {
 	        author: {id: "", firstName: "", lastName: ""},
-	        errors: {}
+	        errors: {},
+	        dirty: false
 	    };
+	},
+
+	componentWillMount: function() {
+		var authorId = this.props.params.id;
+
+		if (authorId) {
+			this.setState({ author: AuthorStore.getAuthorById(authorId) });
+		}
 	},
 
 	isFormValid: function() {
@@ -38,6 +56,7 @@ var manageAuthor = React.createClass({
 	},
 
 	setAuthorState: function(event) {
+		this.setState({dirty: true})
 		var field = event.target.name;
 		var value = event.target.value;
 		this.state.author[field] = value;
@@ -46,17 +65,21 @@ var manageAuthor = React.createClass({
 
 	saveAuthor: function(event) {
 		event.preventDefault();
-<<<<<<< HEAD
 
 		if ( this.isFormValid() ) {
-			console.log("valid");
-			AuthorApi.saveAuthor(this.state.author);
+
+			if (this.state.author.id) {
+				AuthorActions.editAuthor(this.state.author);
+			} else {
+				AuthorActions.createAuthor(this.state.author);
+			}
+			
+			this.setState({dirty: false});
+			toastr.success("Author saved.");
+			this.transitionTo("authors");
+		} else {
+			toastr.error("You have a problem with fields validation");
 		}
-=======
-		AuthorApi.saveAuthor(this.state.author);
-		toastr.success("Author saved.");
-		this.transitionTo("authors");
->>>>>>> de4a49b89aa3edb970ad5f7e56a08205273f7195
 	},
 
 	render: function() {
