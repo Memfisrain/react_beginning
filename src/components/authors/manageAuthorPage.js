@@ -11,13 +11,43 @@ var manageAuthor = React.createClass({
 		Router.Navigation
 	],
 
+	statics: {
+		willTransitionFrom: function(transition, component) {
+			if (component.state.dirty && !confirm("Are you really want to leave this page?")) {
+				transition.abort();
+			}
+		}
+	},
+
 	getInitialState: function () {
 	    return {
-	        author: {id: "", firstName: "", lastName: ""} 
+	        author: {id: "", firstName: "", lastName: ""},
+					errors: {},
+					dirty: false
 	    };
 	},
 
+	authorFormIsValid: function() {
+		var isValid = true;
+		this.state.errors = {};
+
+		if (this.state.author.firstName.length < 3) {
+			this.state.errors.firstName = "This field should contain at least 3 characters";
+			isValid = false;
+		}
+
+		if (this.state.author.lastName.length < 3) {
+			this.state.errors.lastName = "This field should contain at least 3 characters";
+			isValid = false;
+		}
+
+		this.setState({errors: this.state.errors});
+
+		return isValid;
+	},
+
 	setAuthorState: function(event) {
+		this.setState({dirty: true});
 		var field = event.target.name;
 		var value = event.target.value;
 		this.state.author[field] = value;
@@ -26,9 +56,14 @@ var manageAuthor = React.createClass({
 
 	saveAuthor: function(event) {
 		event.preventDefault();
-		AuthorApi.saveAuthor(this.state.author);
-		toastr.success("Author saved.");
-		this.transitionTo("authors");
+
+		if (this.authorFormIsValid()) {
+			AuthorApi.saveAuthor(this.state.author);
+			toastr.success("Author saved.");
+			this.transitionTo("authors");
+		} else {
+			toastr.error("Check out your entered data");
+		}
 	},
 
 	render: function() {
@@ -36,7 +71,8 @@ var manageAuthor = React.createClass({
 				<AuthorForm 
 					author={this.state.author}
 					onChange={this.setAuthorState}
-					onSave={this.saveAuthor} />
+					onSave={this.saveAuthor}
+					errors={this.state.errors} />
 		);
 	}
 });

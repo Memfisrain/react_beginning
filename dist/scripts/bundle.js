@@ -49655,6 +49655,13 @@ var React = require("react");
 var Input = require("../common/textInput");
 
 var AuthorForm = React.createClass({displayName: "AuthorForm",
+	propTypes: {
+		author: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func.isRequired,
+		onSave: React.PropTypes.func.isRequired,
+		errors: React.PropTypes.object
+	},
+
 	render: function() {
 		return (
 			React.createElement("form", null, 
@@ -49663,12 +49670,14 @@ var AuthorForm = React.createClass({displayName: "AuthorForm",
 				React.createElement(Input, {name: "firstName", 
 					label: "First name", 
 					value: this.props.author.firstName, 
-					onChange: this.props.onChange}), 
+					onChange: this.props.onChange, 
+					error: this.props.errors.firstName}), 
 				
 				React.createElement(Input, {name: "lastName", 
 					label: "Last name", 
 					value: this.props.author.lastName, 
-					onChange: this.props.onChange}), 
+					onChange: this.props.onChange, 
+					error: this.props.errors.lastName}), 
 
 				React.createElement("input", {type: "submit", className: "btn btn-primary", value: "create", onClick: this.props.onSave})
 			)
@@ -49764,13 +49773,43 @@ var manageAuthor = React.createClass({displayName: "manageAuthor",
 		Router.Navigation
 	],
 
+	statics: {
+		willTransitionFrom: function(transition, component) {
+			if (component.state.dirty && !confirm("Are you really want to leave this page?")) {
+				transition.abort();
+			}
+		}
+	},
+
 	getInitialState: function () {
 	    return {
-	        author: {id: "", firstName: "", lastName: ""} 
+	        author: {id: "", firstName: "", lastName: ""},
+					errors: {},
+					dirty: false
 	    };
 	},
 
+	authorFormIsValid: function() {
+		var isValid = true;
+		this.state.errors = {};
+
+		if (this.state.author.firstName.length < 3) {
+			this.state.errors.firstName = "This field should contain at least 3 characters";
+			isValid = false;
+		}
+
+		if (this.state.author.lastName.length < 3) {
+			this.state.errors.lastName = "This field should contain at least 3 characters";
+			isValid = false;
+		}
+
+		this.setState({errors: this.state.errors});
+
+		return isValid;
+	},
+
 	setAuthorState: function(event) {
+		this.setState({dirty: true});
 		var field = event.target.name;
 		var value = event.target.value;
 		this.state.author[field] = value;
@@ -49779,9 +49818,14 @@ var manageAuthor = React.createClass({displayName: "manageAuthor",
 
 	saveAuthor: function(event) {
 		event.preventDefault();
-		AuthorApi.saveAuthor(this.state.author);
-		toastr.success("Author saved.");
-		this.transitionTo("authors");
+
+		if (this.authorFormIsValid()) {
+			AuthorApi.saveAuthor(this.state.author);
+			toastr.success("Author saved.");
+			this.transitionTo("authors");
+		} else {
+			toastr.error("Check out your entered data");
+		}
 	},
 
 	render: function() {
@@ -49789,7 +49833,8 @@ var manageAuthor = React.createClass({displayName: "manageAuthor",
 				React.createElement(AuthorForm, {
 					author: this.state.author, 
 					onChange: this.setAuthorState, 
-					onSave: this.saveAuthor})
+					onSave: this.saveAuthor, 
+					errors: this.state.errors})
 		);
 	}
 });
@@ -49836,7 +49881,7 @@ var Input = React.createClass({displayName: "Input",
 	    onChange: React.PropTypes.func.isRequired,
 	    placeholder: React.PropTypes.string,
 	    value: React.PropTypes.string,
-	    error: React.PropTypes.string,
+	    error: React.PropTypes.string
 	},
 	
 	render: function() {
