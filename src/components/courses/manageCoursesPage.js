@@ -14,19 +14,27 @@ var ManageCoursesPage = React.createClass({
 
   getInitialState: function() {
     return {
-      course: {id: "", title: "", watchHref: "", author: {}, length: "", category: ""},
+      course: {id: "", title: "", watchHref: "", author: {id: "", name: ""}, length: "", category: ""},
       errors: {}
     };
   },
 
   componentWillMount: function() {
-    this.setState( {course: CoursesStore.getCourseById(this.props.params.id)} );
+    if (this.props.params.id) {
+      this.setState( {course: CoursesStore.getCourseById(this.props.params.id)} );
+    }
   },
 
   setCourseState: function(event) {
     var field = event.target.name;
     var value = event.target.value;
-    this.state.course[field] = value;
+    
+    if (field === "author") {
+      this.state.course[field].name = value;
+    } else {
+      this.state.course[field] = value;
+    }
+
     this.setState({course: this.state.course});
   },
 
