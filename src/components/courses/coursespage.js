@@ -4,6 +4,7 @@ var React = require("react");
 var Link = require("react-router").Link;
 var CoursesList = require("./coursesList");
 var CoursesStore = require("../../stores/coursesStore");
+var Router = require("react-router").Router;
 
 var _courses = [];
 

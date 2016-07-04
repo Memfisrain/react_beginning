@@ -15,15 +15,17 @@ var CoursesList = React.createClass({
       return (
         <tr key={course.id}>
           <td>
-            <Link to="watchCourse" params={{id: course.id}}>Watch</Link>
+            <a href={course.watchHref} target="_blank">Watch</a>
           </td>
           <td>
             <a href="#" onClick={this.deleteCourse.bind(this, course.id)}>Delete</a>
           </td>
-          <td>course.title</td>
-          <td>course.author</td>
-          <td>course.category</td>
-          <td>course.duration</td>
+          <td>
+            <Link to="editCourse" params={{id: course.id}}>{course.title}</Link>
+          </td>
+          <td>{course.author.name}</td>
+          <td>{course.category}</td>
+          <td>{course.length}</td>
         </tr>
       );
     }

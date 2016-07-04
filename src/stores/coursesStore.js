@@ -8,7 +8,7 @@ var _ = require("lodash");
 
 var CHANGE_EVENT = "change";
 
-var _courses = [];
+var _courses = CourseApi.getAllCourses();
 
 var CoursesStore = Object.assign({}, EventEmitter.prototype, {
   addChangeListener: function(cb) {
