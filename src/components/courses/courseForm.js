@@ -1,20 +1,33 @@
 "use strict";
 
 var React = require("react");
+var TextInput = require("../common/textInput");
 
 var CourseForm = React.createClass({
   render: function () {
     return (
       <form>
-        <label htmlFor="courseTitle">Title</label>
-        <input id="courseTitle" type="text" value="" />
-        <label htmlFor="courseAuthor">Author</label>
-        <input id="courseAuthor" type="text" value="" />
-        <label htmlFor="courseCategory">Category</label>
-        <input id="courseCategory" type="text" value="" />
-        <label htmlFor="courseLength">Length</label>
-        <input id="courseLength" type="text" value="" />
-        <input id="courseSave" class="btn btn-success" type="submit" value="Save" />
+        <TextInput name="title"
+          label="Title"
+          onChange={this.props.onChange}
+          value={this.props.course.title}
+          error={this.props.errors.title} />
+        <TextInput name="author"
+          label="Author"
+          onChange={this.props.onChange}
+          value={this.props.course.author.name}
+          error={this.props.errors.author} />
+        <TextInput name="category"
+          label="Category"
+          onChange={this.props.onChange}
+          value={this.props.course.category}
+          error={this.props.errors.category} />
+        <TextInput name="length"
+          label="Length"
+          onChange={this.props.onChange}
+          value={this.props.course.length}
+          error={this.props.errors.length} />
+        <input id="courseSave" className="btn btn-success" type="submit" value="Save" onClick={this.props.onSave} />
       </form>
     );
   }

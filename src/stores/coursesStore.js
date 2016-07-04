@@ -25,7 +25,7 @@ var CoursesStore = Object.assign({}, EventEmitter.prototype, {
 
   editCourse: function(course) {
     var c = _.find(_courses, {id: course.id}),
-      cInd = _.index(_courses, c);
+      cInd = _.indexOf(_courses, c);
 
     _courses.splice(cInd, 1, course);
   },
@@ -44,7 +44,7 @@ var CoursesStore = Object.assign({}, EventEmitter.prototype, {
 });
 
 Dispatcher.register(function(payload) {
-  switch(payload.actionType) {
+  switch(payload.type) {
     case CoursesActionsTypes.ADD_COURSE:
       _courses.push(payload.course);
       CoursesStore.emitChange();
