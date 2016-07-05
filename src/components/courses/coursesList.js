@@ -2,14 +2,8 @@
 
 var React = require("react");
 var Link = require("react-router").Link;
-var CoursesActions = require("../../actions/coursesActions");
 
 var CoursesList = React.createClass({
-  deleteCourse: function (courseId, event) {
-    event.preventDefault();
-    CoursesActions.removeCourse(courseId);
-  },
-
   render: function () {
     function createCourseRow(course) {
       return (
@@ -18,7 +12,7 @@ var CoursesList = React.createClass({
             <a href={course.watchHref} target="_blank">Watch</a>
           </td>
           <td>
-            <a href="#" onClick={this.deleteCourse.bind(this, course.id)}>Delete</a>
+            <a href="#" onClick={this.props.onRemove.bind(this, course.id)}>Delete</a>
           </td>
           <td>
             <Link to="editCourse" params={{id: course.id}}>{course.title}</Link>

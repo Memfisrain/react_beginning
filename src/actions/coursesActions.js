@@ -14,12 +14,12 @@ var CoursesActions = {
     });
   },
 
-  removeCourse: function(course) {
-    CoursesApi.deleteCourse(course.id);
+  removeCourse: function(courseId) {
+    CoursesApi.deleteCourse(courseId);
 
     Dispatcher.dispatch({
       type: ActionsTypes.REMOVE_COURSE,
-      courseId: course.id
+      courseId: courseId
     });
   },
 

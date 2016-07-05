@@ -2,6 +2,7 @@
 
 var React = require("react");
 var TextInput = require("../common/textInput");
+var SelectBox = require("../common/selectBox");
 
 var CourseForm = React.createClass({
   render: function () {
@@ -12,11 +13,11 @@ var CourseForm = React.createClass({
           onChange={this.props.onChange}
           value={this.props.course.title}
           error={this.props.errors.title} />
-        <TextInput name="author"
+        <SelectBox name="author"
           label="Author"
           onChange={this.props.onChange}
-          value={this.props.course.author.name}
-          error={this.props.errors.author} />
+          error={this.props.errors.author}
+          authors={this.props.authors} />
         <TextInput name="category"
           label="Category"
           onChange={this.props.onChange}
