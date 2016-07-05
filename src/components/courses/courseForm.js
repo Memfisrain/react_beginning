@@ -16,6 +16,7 @@ var CourseForm = React.createClass({
         <SelectBox name="author"
           label="Author"
           onChange={this.props.onChange}
+          value={this.props.course.author.name}
           error={this.props.errors.author}
           authors={this.props.authors} />
         <TextInput name="category"

@@ -24,7 +24,9 @@ var ManageCoursesPage = React.createClass({
 
   componentWillMount: function() {
     if (this.props.params.id) {
-      this.setState( {course: CoursesStore.getCourseById(this.props.params.id)} );
+      this.setState( {
+        course: CoursesStore.getCourseById(this.props.params.id)
+      } );
     }
 
     _authors = AuthorStore.getAllAuthors();

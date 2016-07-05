@@ -5,7 +5,8 @@ var React = require("react");
 var SelectBox = React.createClass({
   propTypes: {
     name: React.PropTypes.string.isRequired,
-    onChange: React.PropTypes.func.isRequired
+    onChange: React.PropTypes.func.isRequired,
+    value: React.PropTypes.string
   },
 
   render: function () {
@@ -27,6 +28,7 @@ var SelectBox = React.createClass({
         <div className="field">
           <select name={this.props.name}
                   className="form-control"
+                  value={this.props.value}
                   ref={this.props.name}
                   onChange={this.props.onChange}>
             {this.props.authors.map(renderOption, this)}
