@@ -99,7 +99,8 @@ var ManageCoursesPage = React.createClass({
           onChange={this.setCourseState}
           onSave={this.saveCourse}
           errors={this.state.errors}
-          authors={_authors} />
+          authors={_authors}
+          defaultAuthor={_authors[0].firstName + " " + _authors[0].lastName}/>
       </div>
     );
   }

@@ -9,6 +9,10 @@ var SelectBox = React.createClass({
     value: React.PropTypes.string
   },
 
+  componentDidMount: function() {
+
+  },
+
   render: function () {
     function renderOption(author) {
       return (
@@ -29,6 +33,7 @@ var SelectBox = React.createClass({
           <select name={this.props.name}
                   className="form-control"
                   value={this.props.value}
+                  defaultValue={this.props.defaultAuthor}
                   ref={this.props.name}
                   onChange={this.props.onChange}>
             {this.props.authors.map(renderOption, this)}
